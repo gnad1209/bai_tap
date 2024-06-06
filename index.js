@@ -2,10 +2,11 @@ const moment = require('moment');
 const readline = require('readline')
 
 class Student {
-    constructor(name, birthdate, grades) {
+    constructor(name, birthdate, grades, isPayFee) {
         this.name = name;
         this.birthdate = birthdate;
         this.grades = grades;
+        this.isPayFee = isPayFee;
     }
 
     calculateAge() {
@@ -21,7 +22,7 @@ class Student {
     }
 }
 
-const createStudent = (name, birthdate, grades) => new Student(name, birthdate, grades);
+const createStudent = (name, birthdate, grades, isPayFee) => new Student(name, birthdate, grades, isPayFee);
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -42,7 +43,9 @@ const getStudentInfo = async () => {
     const birthdate = moment(birthdateInput).format('DD-MM-YYYY');
     const gradesInput = await askQuestion("Nhập điểm số cách nhau bởi dấu phẩy: ")
     const grades = gradesInput.split(',').map(Number);
-    return createStudent(name, birthdate, grades);
+    const isPayFeeInput = await askQuestion('Học sinh đã đóng học phí chưa? (yes/no): ');
+    const isPayFee = isPayFeeInput.toLowerCase().trim() === 'yes';
+    return createStudent(name, birthdate, grades, isPayFee);
 }
 
 const printStudentInfo = async () => {
@@ -54,11 +57,7 @@ const printStudentInfo = async () => {
         students.push(student);
     }
 
-    // const combineGrades = students.map(student => [...student.grades])
-    // console.log(`Điểm số kết hợp: ${combineGrades.join(', ')}`);
 
-    // const averageGrades = students.map(student => student.calculateAverage());
-    // console.log(`Điểm trung bình của các học sinh: ${averageGrades.join(', ')}`);
 
     let action;
     do {
@@ -70,6 +69,7 @@ const printStudentInfo = async () => {
         console.log('5. Thêm học sinh mới: ')
         console.log('6. Xóa học sinh');
         console.log('7. Sắp xếp danh sách học sinh theo điểm từ cao xuống thấp: ')
+        console.log('8. Sửa thông tin học sinh: ')
         console.log('10. Thoát');
         console.log('-----');
         action = await askQuestion('Lựa chọn của bạn: ');
@@ -78,11 +78,8 @@ const printStudentInfo = async () => {
                 console.log('\nDanh sách học sinh:');
                 students.map(student => {
                     const age = student.calculateAge()
-                    console.log(`
-                    Tên: ${student.name}
-                    Ngày sinh: ${student.birthdate}
-                    Điểm: ${student.grades.join(', ')}
-                    Tuổi: ${age}`)
+                    student.isPayFee ? console.log('Đã đóng học phí') : console.log('Chưa đóng học phí')
+                    console.log('----')
                 })
                 break;
             case '2':
@@ -97,6 +94,7 @@ const printStudentInfo = async () => {
                         console.log(`Ngày sinh: ${student.birthdate}`);
                         console.log(`Tuổi: ${student.calculateAge()}`);
                         console.log(`Điểm số: ${student.grades.join(', ')}`);
+                        student.isPayFee ? console.log(`Đã đóng học phí`) : console.log(`Chưa đóng học phí`)
                         console.log('---');
                     });
                 } else {
@@ -139,6 +137,18 @@ const printStudentInfo = async () => {
             case '7':
                 students.sort((a, b) => b.calculateAverage() - a.calculateAverage());
                 console.log('Danh sách học sinh đã được sắp xếp theo điểm số trung bình (cao xuống thấp).');
+                break;
+            case '8':
+                const nameToEdit = await askQuestion('Nhập tên học sinh bạn muốn sửa: ');
+                const indexToEdit = students.findIndex(student => student.name === nameToEdit);
+                if (indexToEdit !== -1) {
+                    console.log(`Nhập thông tin mới cho học sinh có tên "${nameToEdit}":`);
+                    const updatedStudent = await getStudentInfo(students[indexToEdit]);
+                    students[indexToEdit] = updatedStudent;
+                    console.log(`Thông tin học sinh có tên "${nameToEdit}" đã được cập nhật.`);
+                } else {
+                    console.log(`Không tìm thấy học sinh có tên "${nameToEdit}".`);
+                }
                 break;
             case '10':
                 console.log('Thoát chương trình.');
