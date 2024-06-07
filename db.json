@@ -1,0 +1,13 @@
+{
+  "students": [
+    {
+      "id": 1,
+      "name": "Đăng",
+      "birthdate": "2002-12-12",
+      "grades": [
+        90
+      ],
+      "isPayFee": false
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Manage Students</h1>
+        
+        <div class="form-container">
+            <h2>Add Student</h2>
+            <form id="addStudentForm">
+                <input type="text" id="addName" placeholder="Name" required>
+                <input type="text" id="addBirthdate" placeholder="Birthdate (DD-MM-YYYY)" required>
+                <input type="text" id="addGrades" placeholder="Grades (comma separated)" required>
+                <label>
+                    Fee Paid:
+                    <input type="checkbox" id="addIsPayFee">
+                </label>
+                <button type="submit">Add Student</button>
+            </form>
+        </div>
+        
+        <div class="form-container">
+            <h2>Update Student</h2>
+            <form id="updateStudentForm">
+                <input type="number" id="updateId" placeholder="Student ID" required>
+                <input type="text" id="updateName" placeholder="Name" required>
+                <input type="text" id="updateBirthdate" placeholder="Birthdate (DD-MM-YYYY)" required>
+                <input type="text" id="updateGrades" placeholder="Grades (comma separated)" required>
+                <label>
+                    Fee Paid:
+                    <input type="checkbox" id="updateIsPayFee">
+                </label>
+                <button type="submit">Update Student</button>
+            </form>
+        </div>
+        
+        <div class="form-container">
+            <h2>Delete Student</h2>
+            <form id="deleteStudentForm">
+                <input type="number" id="deleteId" placeholder="Student ID" required>
+                <button type="submit">Delete Student</button>
+            </form>
+        </div>
+        
+        <div class="form-container">
+            <h2>Search Student</h2>
+            <form id="searchStudentForm">
+                <input type="text" id="searchName" placeholder="Name" required>
+                <button type="submit">Search Student</button>
+            </form>
+        </div>
+
+        <div class="form-container">
+            <h2>Filter Students</h2>
+            <button onclick="filterTopStudent()">Top Student</button>
+            <button onclick="filterUnpaidStudents()">Unpaid Fee Students</button>
+        </div>
+        <table id="studentTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Birthdate</th>
+                    <th>Grades</th>
+                    <th>Fee Paid</th>
+                    <th>Time to Graduate</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <div id="output"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
