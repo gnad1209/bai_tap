@@ -1,11 +1,6 @@
-const moment = require('moment')
-
 let currentId = 0;
 
-// URL của API giả định
 const apiUrl = 'http://localhost:3000/students';
-
-// Hàm để cập nhật bảng học sinh
 function updateStudentTable(students) {
     const tableBody = document.getElementById('studentTable').getElementsByTagName('tbody')[0];
     tableBody.innerHTML = ''; // Xóa nội dung cũ của bảng
@@ -18,26 +13,32 @@ function updateStudentTable(students) {
         row.insertCell(3).innerText = student.grades.join(', ');
         row.insertCell(4).innerText = student.isPayFee ? 'Yes' : 'No';
         row.insertCell(5).innerText = calculateTimeToGraduate(student.birthdate);
+
+        row.addEventListener('click', () => {
+            document.getElementById('updateId').value = student.id;
+            document.getElementById('deleteId').value = student.id;
+            document.getElementById('updateName').value = student.name;
+            document.getElementById('updateBirthdate').value = student.birthdate;
+            document.getElementById('updateGrades').value = student.grades.join(', ');
+            document.getElementById('updateIsPayFee').checked = student.isPayFee;
+        });
     });
 }
 
-// Hàm tính thời gian còn lại để ra trường
 function calculateTimeToGraduate(birthdate) {
     const birthDate = moment(birthdate, 'DD-MM-YYYY');
     const graduationDate = birthDate.add(22, 'years');
     const currentDate = moment();
     const timeRemaining = graduationDate.diff(currentDate, 'years', true);
-
-    return timeRemaining > 0 ? `${timeRemaining.toFixed(2)} years` : 'Graduated';
+    
+    return Math.floor(timeRemaining) > 0 ? `${Math.floor(timeRemaining)} năm ra trường` : 'Đã ra trường';
 }
 
-// Cập nhật hiển thị kết quả
 function displayOutput(message) {
     const output = document.getElementById('output');
     output.innerHTML = `<pre>${message}</pre>`;
 }
 
-// Hàm thêm học sinh
 document.getElementById('addStudentForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -50,32 +51,30 @@ document.getElementById('addStudentForm').addEventListener('submit', async (e) =
         grades: document.getElementById('addGrades').value.split(',').map(Number),
         isPayFee: document.getElementById('addIsPayFee').checked
     };
-
-    try {
-        const response = await fetch(apiUrl, {
+    return new Promise((resolve, reject) => {
+        fetch(apiUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(newStudent)
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => reject(err));
+            }
+            return response.json().then(data => resolve(data));
+        })
+        .then(result => {
+            return fetchStudents();
+        })
+        .catch(error => {
+            displayOutput('Error: ' + error.message);
         });
-
-        if (!response.ok) {
-            throw new Error('Failed to add student');
-        }
-
-        const result = await response.json();
-        displayOutput('Student added: ' + JSON.stringify(result));
-        
-        // Cập nhật bảng học sinh
-        await fetchStudents();
-    } catch (error) {
-        displayOutput('Error: ' + error.message);
-    }
+    })
 });
 
-// Hàm cập nhật học sinh
-document.getElementById('updateStudentForm').addEventListener('submit', async (e) => {
+document.getElementById('updateStudentForm').addEventListener('submit', (e) => {
     e.preventDefault();
 
     const studentId = document.getElementById('updateId').value;
@@ -86,30 +85,20 @@ document.getElementById('updateStudentForm').addEventListener('submit', async (e
         isPayFee: document.getElementById('updateIsPayFee').checked
     };
 
-    try {
-        const response = await fetch(`${apiUrl}/${studentId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(updatedStudent)
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to update student');
-        }
-
-        const result = await response.json();
+    fetch(`${apiUrl}/${studentId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updatedStudent)
+    })
+    .then(result => {
         displayOutput('Student updated: ' + JSON.stringify(result));
-        
-        // Cập nhật bảng học sinh
-        await fetchStudents();
-    } catch (error) {
-        displayOutput('Error: ' + error.message);
-    }
+        return fetchStudents();
+    })
+    .catch(error => displayOutput('Error: ' + error.message));
 });
 
-// Hàm xóa học sinh
 document.getElementById('deleteStudentForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -126,14 +115,12 @@ document.getElementById('deleteStudentForm').addEventListener('submit', async (e
 
         displayOutput('Student deleted');
         
-        // Cập nhật bảng học sinh
         await fetchStudents();
     } catch (error) {
         displayOutput('Error: ' + error.message);
     }
 });
 
-// Hàm tìm kiếm học sinh
 document.getElementById('searchStudentForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -148,16 +135,12 @@ document.getElementById('searchStudentForm').addEventListener('submit', async (e
         const students = await response.json();
         const matchedStudents = students.filter(student => new RegExp(searchName, 'i').test(student.name));
 
-        displayOutput('Search results: ' + JSON.stringify(matchedStudents));
-        
-        // Cập nhật bảng học sinh
         updateStudentTable(matchedStudents);
     } catch (error) {
         displayOutput('Error: ' + error.message);
     }
 });
 
-// Hàm lọc học sinh có điểm cao nhất
 async function filterTopStudent() {
     try {
         const response = await fetch(apiUrl);
@@ -174,14 +157,12 @@ async function filterTopStudent() {
 
         displayOutput('Top student: ' + JSON.stringify(topStudent));
         
-        // Cập nhật bảng học sinh
         updateStudentTable([topStudent]);
     } catch (error) {
         displayOutput('Error: ' + error.message);
     }
 }
 
-// Hàm lọc học sinh chưa đóng học phí
 async function filterUnpaidStudents() {
     try {
         const response = await fetch(apiUrl);
@@ -194,14 +175,12 @@ async function filterUnpaidStudents() {
 
         displayOutput('Unpaid fee students: ' + JSON.stringify(unpaidStudents));
         
-        // Cập nhật bảng học sinh
         updateStudentTable(unpaidStudents);
     } catch (error) {
         displayOutput('Error: ' + error.message);
     }
 }
 
-// Hàm hiển thị thời gian còn lại để ra trường cho từng học sinh
 async function displayTimeToGraduate() {
     try {
         const response = await fetch(apiUrl);
@@ -220,14 +199,12 @@ async function displayTimeToGraduate() {
 
         displayOutput('Students with time to graduate: ' + JSON.stringify(studentTimes));
         
-        // Cập nhật bảng học sinh
         updateStudentTable(studentTimes);
     } catch (error) {
         displayOutput('Error: ' + error.message);
     }
 }
 
-// Hàm để lấy danh sách học sinh từ API và cập nhật bảng
 async function fetchStudents() {
     try {
         const response = await fetch(apiUrl);
@@ -238,12 +215,10 @@ async function fetchStudents() {
         const students = await response.json();
         updateStudentTable(students);
 
-        // Cập nhật ID hiện tại để không trùng lặp
         currentId = students.reduce((maxId, student) => Math.max(maxId, student.id), 0);
     } catch (error) {
         displayOutput('Error: ' + error.message);
     }
 }
 
-// Hiển thị thông tin các học sinh cùng thời gian còn lại để ra trường khi tải trang
 document.addEventListener('DOMContentLoaded', fetchStudents);

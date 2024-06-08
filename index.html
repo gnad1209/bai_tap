@@ -8,10 +8,10 @@
 </head>
 <body>
     <div class="container">
-        <h1>Manage Students</h1>
+        <h1>Quản lý Students</h1>
         
         <div class="form-container">
-            <h2>Add Student</h2>
+            <h2>Thêm học sinh</h2>
             <form id="addStudentForm">
                 <input type="text" id="addName" placeholder="Name" required>
                 <input type="text" id="addBirthdate" placeholder="Birthdate (DD-MM-YYYY)" required>
@@ -20,12 +20,12 @@
                     Fee Paid:
                     <input type="checkbox" id="addIsPayFee">
                 </label>
-                <button type="submit">Add Student</button>
+                <button type="submit">Thêm</button>
             </form>
         </div>
         
         <div class="form-container">
-            <h2>Update Student</h2>
+            <h2>Cập nhật học sinh</h2>
             <form id="updateStudentForm">
                 <input type="number" id="updateId" placeholder="Student ID" required>
                 <input type="text" id="updateName" placeholder="Name" required>
@@ -35,23 +35,23 @@
                     Fee Paid:
                     <input type="checkbox" id="updateIsPayFee">
                 </label>
-                <button type="submit">Update Student</button>
+                <button type="submit">Cập nhật</button>
             </form>
         </div>
         
         <div class="form-container">
-            <h2>Delete Student</h2>
+            <h2>Xóa học sinh</h2>
             <form id="deleteStudentForm">
                 <input type="number" id="deleteId" placeholder="Student ID" required>
-                <button type="submit">Delete Student</button>
+                <button type="submit">Xóa</button>
             </form>
         </div>
         
         <div class="form-container">
-            <h2>Search Student</h2>
+            <h2>Tìm kiếm học sinh</h2>
             <form id="searchStudentForm">
                 <input type="text" id="searchName" placeholder="Name" required>
-                <button type="submit">Search Student</button>
+                <button type="submit">Tìm kiếm</button>
             </form>
         </div>
 
@@ -64,11 +64,11 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Name</th>
-                    <th>Birthdate</th>
-                    <th>Grades</th>
-                    <th>Fee Paid</th>
-                    <th>Time to Graduate</th>
+                    <th>Tên</th>
+                    <th>Năm sinh</th>
+                    <th>Điểm</th>
+                    <th>Tình trạng học phí</th>
+                    <th>Thời gian ra trường</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -77,5 +77,7 @@
     </div>
 
     <script src="app.js"></script>
+    <script type="module" src="./service.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
 </body>
 </html>
