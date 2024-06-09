@@ -1,5 +1,5 @@
 let currentId = 0;
-
+const abc = 0
 // URL của API giả định
 const apiUrl = 'http://localhost:3000/students';
 
