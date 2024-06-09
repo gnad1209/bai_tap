@@ -1,16 +1,7 @@
 {
   "students": [
     {
-      "name": "Đăng",
-      "birthdate": "12-09-2002",
-      "grades": [
-        90
-      ],
-      "isPayFee": false,
-      "id": "2"
-    },
-    {
-      "id": "3",
+      "id": "1",
       "name": "Đăng",
       "birthdate": "12-09-2002",
       "grades": [
@@ -19,45 +10,9 @@
       "isPayFee": false
     },
     {
-      "id": "4",
-      "name": "Đăng",
-      "birthdate": "12-09-2002",
-      "grades": [
-        90
-      ],
-      "isPayFee": true
-    },
-    {
-      "id": "5",
-      "name": "Hải Đăng",
-      "birthdate": "12-09-2002",
-      "grades": [
-        90
-      ],
-      "isPayFee": false
-    },
-    {
-      "id": "6",
+      "id": "2",
       "name": "Hải Đăng",
       "birthdate": "12-09-2003",
-      "grades": [
-        80
-      ],
-      "isPayFee": true
-    },
-    {
-      "id": "7",
-      "name": "Hải Đăng",
-      "birthdate": "12-09-2002",
-      "grades": [
-        90
-      ],
-      "isPayFee": false
-    },
-    {
-      "id": 8,
-      "name": "Đăng123123",
-      "birthdate": "12-09-2002",
       "grades": [
         90
       ],
